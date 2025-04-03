@@ -9390,7 +9390,7 @@
       .then(res => res.text())
       .then(text => {
         const parser = new DOMParser();
-        const docHTML = parser.parseFromString(text.replaceAll(/<script\b[^>]*>([\s\S\n]*?)<\/script>/gi, ''), 'text/html');
+        const docHTML = parser.parseFromString(removerScripts(text), 'text/html');
         docHTML.querySelector("h1").id = pegarID(encontrados2[i]);
         docHTML.querySelectorAll('img').forEach(img => {
           imagem(encontrados2[i], img);
@@ -9424,6 +9424,10 @@
           alert("Ok!");
         }
       })
+  }
+
+  function removerScripts(texto){
+    return texto.replaceAll(/<script\b[^>]*>([\s\S\n]*?)<\/script>/gi, '')
   }
 
   function irPara(url = "/") {
@@ -9464,6 +9468,7 @@
     document.head.append(style2);
     document.head.append(style);
     style.sheet.insertRule("p:has(> img):not(:has(:not(img))) { text-align: center; }");
+    style.sheet.insertRule("p:has(> img):not(:has(:not(img))) + p[style*=italic] { text-align: center; }");
     style.sheet.insertRule("p:has(> img):not(:has(:not(img))) img { border: 1px solid #80808040; }");
     style.sheet.insertRule("* { scroll-behavior: smooth; word-wrap: break-word !important; word-break: break-word !important; max-width: 100% !important }");
     style.sheet.insertRule("[data-targetname]:not(.show), droptext:not(show) { display: block !important; }");
