@@ -9377,8 +9377,12 @@
           encontrados2.push(link);
         }
       }
-    })
-    printer();
+    });
+    if (encontrados2.length == 0) {
+      alert("Nada encontrado ou já foram encontrados.");
+    } else {
+      printer();
+    }
   }
 
   function printer(i = 0) {
@@ -9386,10 +9390,7 @@
       .then(res => res.text())
       .then(text => {
         const parser = new DOMParser();
-        const docHTML = parser.parseFromString(text, 'text/html');
-        docHTML.querySelectorAll("script").forEach((script) => {
-          script.remove();
-        });
+        const docHTML = parser.parseFromString(text.replaceAll(/<script\b[^>]*>([\s\S\n]*?)<\/script>/gi, ''), 'text/html');
         docHTML.querySelector("h1").id = pegarID(encontrados2[i]);
         docHTML.querySelectorAll('img').forEach(img => {
           imagem(encontrados2[i], img);
