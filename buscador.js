@@ -9467,6 +9467,7 @@
     style.sheet.insertRule("* { scroll-behavior: smooth; word-wrap: break-word !important; word-break: break-word !important; max-width: 100% !important }");
     style.sheet.insertRule("[data-targetname]:not(.show), droptext:not(show) { display: block !important; }");
     style.sheet.insertRule("body { margin-left: 15%; margin-right: 15%; }");
+    style.sheet.insertRule("@media (max-width: 769px) { body { margin-left: 5% !important; margin-right: 5% !important; } }");
     style.sheet.insertRule("h1 { position: -webkit-sticky; position: sticky; top: 0; z-index: 1020; background-color: white; font-size: 1.7rem; transition: all 2s linear allow-discrete; }");
     style.sheet.insertRule(":has(a:focus) h1:target { position: static; background-color: #0000ff94; transition: none; }");
     style.sheet.insertRule("details { font-family: sans-serif; }");
@@ -9474,12 +9475,9 @@
     style.sheet.insertRule("details[open]>summary { border-bottom: 1px solid #80808080; }");
     style.sheet.insertRule("details>span { transition: background-color 150ms ease-in; background-color: rgba(255, 0, 0, 0); padding: 0.2rem; border-radius: 0.2rem; text-wrap: pretty; }");
     style.sheet.insertRule("details>span:hover{ transition: background-color 0s linear; background-color: rgba(255, 0, 0, 0.25); }");
-    const meta = document.createElement("meta");
-    meta.name = "viewport";
-    meta.content = "width=device-width, initial-scale=1.0";
-    document.head.append(meta);
+    style.sheet.insertRule("body { padding-bottom: 50vh; }");
     document.querySelectorAll("script").forEach(scripts => { scripts.remove(); });
-    document.head.insertAdjacentHTML("beforeEnd", `<meta name="viewport" content="width=device-width, initial-scale=1" />`);
+    document.head.insertAdjacentHTML("beforeend", `<meta name="viewport" content="width=device-width, initial-scale=1" />`);
   }
 
   preparaDisposcao();
