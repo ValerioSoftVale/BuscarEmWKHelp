@@ -9416,7 +9416,7 @@
         irPara(encontrados2[i]);
       })
       .finally(() => {
-        if (encontrados2[i] != undefined) {
+        if (encontrados2[i + 1] != undefined) {
           printer(i + 1);
         } else {
           encontrados2 = [];
