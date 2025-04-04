@@ -9344,6 +9344,18 @@
     }
   }
 
+  function criarBotaoRetorno() {
+    const botao = document.createElement("button");
+    botao.innerText = "↩️";
+    botao.style.padding = "0.4rem";
+    botao.style.marginLeft = "0.4rem";
+    botao.addEventListener("click", () => {
+      document.body.innerHTML = "";
+      void fetch("https://valeriosoftvale.github.io/BuscarEmWKHelp/buscador.js").then(r=>r.text()).then(r=>{eval(r);}).catch((e=>{alert("Não está funcionando 😢");}));
+    });
+    document.body.append(botao);
+  }
+
   function criarBotao() {
     const botao = document.createElement("button");
     botao.innerText = "Buscar 🔎";
@@ -9494,4 +9506,5 @@
   preparaDisposcao();
   criarListaDeTermos();
   criarBotao();
+  criarBotaoRetorno();
 })();
