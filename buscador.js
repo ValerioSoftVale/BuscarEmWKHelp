@@ -9323,25 +9323,25 @@
   ];
 
   function criarListaDeTermos() {
-    const termos = [];
     const details = document.createElement("details");
     const summary = document.createElement("summary");
-    summary.innerText = "Termos e palavras chave possíveis.";
+    summary.innerText = "Caminhos para carregar 📄";
     details.append(summary);
+    injetaTermos(details);
+    document.body.append(details);
+  }
+
+  function injetaTermos(details = document.querySelector("details")) {
     for (const link of links) {
       const lista = link.split("/");
+      const span = document.createElement("span");
       lista.forEach((termo, index) => {
         if (index < 4) { return; }
         termo = termo.replace(".htm", "");
-        if (!termos.includes(termo)) {
-          const span = document.createElement("span");
-          span.innerText = decodeURIComponent(termo);
-          details.append(span, " ");
-          termos.push(termo);
-        }
+        span.innerText += `/${decodeURIComponent(termo)}`;
       });
+      details.append(span, " ");
     }
-    document.body.append(details);
   }
 
   function criarBotao() {
@@ -9358,27 +9358,32 @@
     document.body.append(botao);
   }
 
-  let encontrados = [];
-  let encontrados2 = [];
+  const encontrados = [];
 
   function buscar(termos = "") {
     termos = termos.replaceAll(" ", "_");
     termos.split("|").forEach((termo) => {
+      const indices = [];
       for (const link of links) {
         if (
           removerAcentos(
-            decodeURIComponent(link).toLocaleLowerCase()
+            decodeURIComponent(link).toLowerCase()
           ).includes(
             removerAcentos(termo.toLowerCase())
           )
-          && !encontrados.includes(link)
         ) {
+          indices.push(links.indexOf(link));
           encontrados.push(link);
-          encontrados2.push(link);
         }
       }
+      void indices.reverse();
+      const spans = document.querySelectorAll("details>span");
+      for(const indice of indices){
+        links.splice(indice, 1);
+        spans[indice].remove();
+      }
     });
-    if (encontrados2.length == 0) {
+    if (encontrados.length == 0) {
       alert("Nada encontrado ou já foram encontrados.");
     } else {
       printer();
@@ -9386,14 +9391,14 @@
   }
 
   function printer(i = 0) {
-    fetch(encontrados2[i])
+    fetch(encontrados[i])
       .then(res => res.text())
       .then(text => {
         const parser = new DOMParser();
         const docHTML = parser.parseFromString(removerScripts(text), 'text/html');
-        docHTML.querySelector("h1").id = pegarID(encontrados2[i]);
+        docHTML.querySelector("h1").id = pegarID(encontrados[i]);
         docHTML.querySelectorAll('img').forEach(img => {
-          imagem(encontrados2[i], img);
+          imagem(encontrados[i], img);
         });
         docHTML.querySelectorAll('a').forEach(a => {
           if (a.href.includes("https://help.wk.com.br/")) {
@@ -9413,20 +9418,20 @@
         document.querySelector("body").append(...divs);
       })
       .catch(err => {
-        console.error(err, i, encontrados2[i]);
-        irPara(encontrados2[i]);
+        console.error(err, i, encontrados[i]);
+        irPara(encontrados[i]);
       })
       .finally(() => {
-        if (encontrados2[i + 1] != undefined) {
+        if (encontrados[i + 1] != undefined) {
           printer(i + 1);
         } else {
-          encontrados2 = [];
+          encontrados.length = 0;
           alert("Ok!");
         }
       })
   }
 
-  function removerScripts(texto){
+  function removerScripts(texto) {
     return texto.replaceAll(/<script\b[^>]*>([\s\S\n]*?)<\/script>/gi, '')
   }
 
@@ -9473,13 +9478,13 @@
     style.sheet.insertRule("* { scroll-behavior: smooth; word-wrap: break-word !important; word-break: break-word !important; max-width: 100% !important }");
     style.sheet.insertRule("[data-targetname]:not(.show), droptext:not(show) { display: block !important; }");
     style.sheet.insertRule("body { margin-left: 15%; margin-right: 15%; }");
-    style.sheet.insertRule("@media (max-width: 769px) { body { margin-left: 5% !important; margin-right: 5% !important; } }");
+    style.sheet.insertRule("@media (max-width: 1000px) { body { margin-left: 5% !important; margin-right: 5% !important; } }");
     style.sheet.insertRule("h1 { position: -webkit-sticky; position: sticky; top: 0; z-index: 1020; background-color: white; font-size: 1.7rem; transition: all 2s linear allow-discrete; }");
     style.sheet.insertRule(":has(a:focus) h1:target { position: static; background-color: #0000ff94; transition: none; }");
     style.sheet.insertRule("details { font-family: sans-serif; }");
     style.sheet.insertRule("details>summary { background-color: rgba(255, 255, 255, 1); position: -webkit-sticky; position: sticky; top: 0; z-index: 1020; padding: 1rem 0px 1rem 1rem; font-weight: bold; user-select: none; }");
     style.sheet.insertRule("details[open]>summary { border-bottom: 1px solid #80808080; }");
-    style.sheet.insertRule("details>span { transition: background-color 150ms ease-in; background-color: rgba(255, 0, 0, 0); padding: 0.2rem; border-radius: 0.2rem; text-wrap: pretty; }");
+    style.sheet.insertRule("details>span { transition: background-color 150ms ease-in; background-color: rgba(255, 0, 0, 0); padding: 0.2rem; line-height: 1.4rem; border-radius: 0.2rem; text-wrap: pretty; }");
     style.sheet.insertRule("details>span:hover{ transition: background-color 0s linear; background-color: rgba(255, 0, 0, 0.25); }");
     style.sheet.insertRule("body { padding-bottom: 50vh; }");
     document.querySelectorAll("script").forEach(scripts => { scripts.remove(); });
