@@ -9351,7 +9351,7 @@
     botao.style.marginLeft = "0.4rem";
     botao.addEventListener("click", () => {
       document.body.innerHTML = "";
-      void fetch("https://valeriosoftvale.github.io/BuscarEmWKHelp/buscador.js").then(r=>r.text()).then(r=>{eval(r);}).catch((e=>{alert("Não está funcionando 😢");}));
+      void fetch("https://valeriosoftvale.github.io/BuscarEmWKHelp/buscador.js").then(r => r.text()).then(r => { eval(r); }).catch((e => { alert("Não está funcionando 😢"); }));
     });
     document.body.append(botao);
   }
@@ -9365,7 +9365,13 @@
       do {
         termo = prompt("Buscar 🔎\nUse \"|\" para multiplos termos ao mesmo tempo.");
       } while (termo == "");
-      if (termo != null) { buscar(termo); }
+      if (termo != null) {
+        if (buscar(termo)) {
+          printer();
+        } else {
+          alert("Nada encontrado ou já foram encontrados.");
+        }
+      }
     });
     document.body.append(botao);
   }
@@ -9390,15 +9396,15 @@
       }
       void indices.reverse();
       const spans = document.querySelectorAll("details>span");
-      for(const indice of indices){
+      for (const indice of indices) {
         links.splice(indice, 1);
         spans[indice].remove();
       }
     });
     if (encontrados.length == 0) {
-      alert("Nada encontrado ou já foram encontrados.");
+      return false;
     } else {
-      printer();
+      return true;
     }
   }
 
@@ -9414,7 +9420,23 @@
         });
         docHTML.querySelectorAll('a').forEach(a => {
           if (a.href.includes("https://help.wk.com.br/")) {
-            a.href = "#" + encodeURIComponent(pegarID(a.href));
+            const ahreforig = a.href;
+            const hash = "#" + encodeURIComponent(pegarID(a.href));
+            a.href = hash;
+            let termo = "";
+            ahreforig.split("#")[0].split("?")[0].split("/").forEach((frag, index) => {
+              if (index < 4) { return; }
+              termo += `/${frag}`;
+            });
+            a.addEventListener("click", () => {
+              if (buscar(decodeURIComponent(termo))) {
+                printer();
+                setTimeout(() => {
+                  location.hash = "#";
+                  location.hash = hash;
+                }, 1000);
+              }
+            });
           } else {
             a.target = "_blank";
             a.style.color = "darkred";
