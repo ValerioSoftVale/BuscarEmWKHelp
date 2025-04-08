@@ -9382,7 +9382,7 @@
   const encontrados = [];
 
   function buscar(termos = "", sct = "") {
-    if (termos == "" && !termos.includes(sct)) return false;
+    if (termos == "" || !termos.includes(sct)) return false;
     termos = termos.replaceAll(" ", "_");
     termos.split("|").forEach((termo) => {
       const indices = [];
