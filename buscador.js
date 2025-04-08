@@ -9367,7 +9367,10 @@
       } while (termo == "");
       if (termo != null) {
         if (buscar(termo)) {
-          printer();
+          (async ()=>{
+            await printer();
+            alert("Carregado!");
+          })();
         } else {
           alert("Nada encontrado ou já foram encontrados.");
         }
@@ -9409,60 +9412,55 @@
   }
 
   function printer(i = 0) {
-    fetch(encontrados[i])
-      .then(res => res.text())
-      .then(text => {
-        const parser = new DOMParser();
-        const docHTML = parser.parseFromString(removerScripts(text), 'text/html');
-        docHTML.querySelector("h1").id = pegarID(encontrados[i]);
-        docHTML.querySelectorAll('img').forEach(img => {
-          imagem(encontrados[i], img);
-        });
-        docHTML.querySelectorAll('a').forEach(a => {
-          if (a.href.includes("https://help.wk.com.br/")) {
-            const ahreforig = a.href;
-            const hash = "#" + encodeURIComponent(pegarID(a.href));
-            a.href = hash;
-            let termo = "";
-            ahreforig.split("#")[0].split("?")[0].split("/").forEach((frag, index) => {
-              if (index < 4) { return; }
-              termo += `/${frag}`;
-            });
-            a.addEventListener("click", () => {
-              if (buscar(decodeURIComponent(termo))) {
-                printer();
-                setTimeout(() => {
-                  location.hash = "#";
+    return new Promise((resolve) => {
+      fetch(encontrados[i])
+        .then(res => res.text())
+        .then(text => {
+          const parser = new DOMParser();
+          const docHTML = parser.parseFromString(removerScripts(text), 'text/html');
+          docHTML.querySelector("h1").id = pegarID(encontrados[i]);
+          docHTML.querySelectorAll('img').forEach(img => {
+            imagem(encontrados[i], img);
+          });
+          docHTML.querySelectorAll('a').forEach(a => {
+            if (a.href.includes("https://help.wk.com.br/")) {
+              const caminho = (a.href).split("/");
+              const hash = caminho[caminho.length - 1].split("#")[1] ?? caminho[caminho.length - 1];
+              a.href = "#" + encodeURIComponent(pegarID(a.href));
+              a.addEventListener("click", async (event) => {
+                if (buscar(decodeURIComponent(hash))) {
+                  event.preventDefault();
+                  await printer();
                   location.hash = hash;
-                }, 1000);
-              }
-            });
+                }
+              });
+            } else {
+              a.target = "_blank";
+              a.style.color = "darkred";
+            }
+          });
+          const divs = (function (listaDeDivs) {
+            const novas = [];
+            for (let i = 0; i < listaDeDivs.length - 1; i++) {
+              novas.push(listaDeDivs[i]);
+            }
+            return novas;
+          })(docHTML.querySelectorAll("body>div"));
+          document.querySelector("body").append(...divs);
+        })
+        .catch(err => {
+          console.error(err, i, encontrados[i]);
+          irPara(encontrados[i]);
+        })
+        .finally(() => {
+          if (encontrados[i + 1] != undefined) {
+            void printer(i + 1);
           } else {
-            a.target = "_blank";
-            a.style.color = "darkred";
+            encontrados.length = 0;
           }
+          resolve();
         });
-        const divs = (function (listaDeDivs) {
-          const novas = [];
-          for (let i = 0; i < listaDeDivs.length - 1; i++) {
-            novas.push(listaDeDivs[i]);
-          }
-          return novas;
-        })(docHTML.querySelectorAll("body>div"));
-        document.querySelector("body").append(...divs);
-      })
-      .catch(err => {
-        console.error(err, i, encontrados[i]);
-        irPara(encontrados[i]);
-      })
-      .finally(() => {
-        if (encontrados[i + 1] != undefined) {
-          printer(i + 1);
-        } else {
-          encontrados.length = 0;
-          alert("Ok!");
-        }
-      })
+    });
   }
 
   function removerScripts(texto) {
