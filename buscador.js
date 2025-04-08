@@ -1,5 +1,5 @@
 (function () {
-  "use strict"
+  "use strict";
 
   const links = [
     "https://help.wk.com.br/714/WK/topic.htm",
@@ -9427,8 +9427,9 @@
             if (a.href.includes("https://help.wk.com.br/")) {
               const caminho = (a.href).split("/");
               const hash = caminho[caminho.length - 1].split("#")[1] ?? caminho[caminho.length - 1];
-              a.href = "#" + encodeURIComponent(pegarID(a.href));
+              a.href = "#" + encodeURIComponent(hash);
               a.addEventListener("click", async (event) => {
+                if (hash == "") { event.preventDefault(); }
                 if (buscar(decodeURIComponent(hash), ".htm")) {
                   event.preventDefault();
                   await printer();
