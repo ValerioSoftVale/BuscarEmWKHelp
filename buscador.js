@@ -9367,7 +9367,7 @@
       } while (termo == "");
       if (termo != null) {
         if (buscar(termo)) {
-          (async ()=>{
+          (async () => {
             await printer();
             alert("Carregado!");
           })();
@@ -9381,8 +9381,8 @@
 
   const encontrados = [];
 
-  function buscar(termos = "") {
-    if(termos === "")return false;
+  function buscar(termos = "", sct = "") {
+    if (termos == "" && termos.includes(sct)) return false;
     termos = termos.replaceAll(" ", "_");
     termos.split("|").forEach((termo) => {
       const indices = [];
@@ -9429,7 +9429,7 @@
               const hash = caminho[caminho.length - 1].split("#")[1] ?? caminho[caminho.length - 1];
               a.href = "#" + encodeURIComponent(pegarID(a.href));
               a.addEventListener("click", async (event) => {
-                if (buscar(decodeURIComponent(hash))) {
+                if (buscar(decodeURIComponent(hash), ".htm")) {
                   event.preventDefault();
                   await printer();
                   location.hash = hash;
