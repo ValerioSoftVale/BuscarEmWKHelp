@@ -9325,7 +9325,7 @@
   function criarListaDeTermos() {
     const details = document.createElement("details");
     const summary = document.createElement("summary");
-    summary.innerText = "<u>C</u>aminhos para carregar 📄";
+    summary.innerHTML = "<u>C</u>aminhos para carregar 📄";
     summary.accessKey = "c";
     details.append(summary);
     injetaTermos(details);
