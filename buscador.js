@@ -9325,7 +9325,8 @@
   function criarListaDeTermos() {
     const details = document.createElement("details");
     const summary = document.createElement("summary");
-    summary.innerText = "Caminhos para carregar 📄";
+    summary.innerText = "<u>C</u>aminhos para carregar 📄";
+    summary.accessKey = "c";
     details.append(summary);
     injetaTermos(details);
     document.body.append(details);
@@ -9347,6 +9348,7 @@
   function criarBotaoRetorno() {
     const botao = document.createElement("button");
     botao.innerText = "↩️";
+    botao.accessKey = "r";
     botao.style.padding = "0.4rem";
     botao.style.marginLeft = "0.4rem";
     botao.addEventListener("click", () => {
@@ -9358,7 +9360,8 @@
 
   function criarBotao() {
     const botao = document.createElement("button");
-    botao.innerText = "Buscar 🔎";
+    botao.innerHTML = "<u>B</u>uscar 🔎";
+    botao.accessKey = "b";
     botao.style.padding = "0.4rem";
     botao.addEventListener("click", () => {
       let termo = "";
