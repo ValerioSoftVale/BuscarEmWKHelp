@@ -61,7 +61,7 @@
 
   alert(`Script instalado e iniciado,
 
-Para parar o precesso de abertura use Alt + P
-E para iniciar novemente use Alt + I
+Para parar o processo de abertura use Alt + P
+E para iniciar novamente use Alt + I
 `);
 })();
