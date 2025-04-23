@@ -20,3 +20,5 @@ Execute o seginte script na página [Help da WK](https://help.wk.com.br/714/WK/t
 javascript:void fetch("https://valeriosoftvale.github.io/BuscarEmWKHelp/Abridor.js").then(r=>r.text()).then(r=>{eval(r);}).catch((e=>{alert("Não está funcionando 😢");}));
 ```
 
+https://github.com/user-attachments/assets/83934aa0-f753-43fb-b031-a6ad727b3617
+
